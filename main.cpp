@@ -9,6 +9,7 @@
 #include <vector>
 #include <map>
 #include <cctype>
+#include <fstream> //needed for input/output of data
 #include <string>
 #include <random>
 
@@ -44,7 +45,12 @@ class HangManBase
 
 		void StoringOfData(vector<string>& DataStorer) //Rami - Operation to store the data, this opens the file and stores the data.
 		{
+			const string HoldFolderLocationplusfile = "InputData\\Words.json"; //input file location - Rami
+			
 
+			ifstream WordsDataFile; //using if because it will only input the file and not write over it;
+
+			WordsDataFile.open(HoldFolderLocationplusfile); //Opening the file
 		}
 
 
