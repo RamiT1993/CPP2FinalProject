@@ -15,18 +15,28 @@
 #include "json.hpp"
 
 
+using namespace std; //getting rid of annoying std - rami
 
 
 
+/*also when you sort allow the user to sort based on length or alphabetical nature*/
 
 
+//Base Class or derived class will have others work on it to include searching/sorting operations
 
 
 
+//Rami Portion Start
 
+//This base class Purpose is to load the data from the json file located inside of the rootfolder
+class HangManBase
+{
+	protected:
 
+};
 
 
+//Rami Portion End
 
 
 
@@ -59,7 +69,6 @@
 
 
 
-//Rami Portion
 
 
 
@@ -239,7 +248,6 @@
 
 
 
-//Hussein Portion
 
 
 
@@ -331,14 +339,6 @@
 
 
 
-
-
-
-
-
-
-
-//Tajwar Portion
 
 
 
