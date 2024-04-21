@@ -55,14 +55,19 @@ class HangManBase
 			//Using nlohmann json library as done previously because I will not loop through it if theirs already a previously done library.
 			nlohmann::json JsonDataInfoHolder;
 			WordsDataFile >> JsonDataInfoHolder; // Outputting infomation in file to Json as the library will handle the whole outputting of data - Rami 
+
+			WordsDataFile.close(); //Closing Words Data File As I don't Need to mess with it anymore.
+			cout << JsonDataInfoHolder;
+
 		}
 
 
 		//Constructor - When called it activates the loading of data from json file to the vector - Rami T
 		HangManBase()
 		{
-
+			StoringOfData(this->HoldWords);
 		}
+		
 
 
 		virtual ~HangManBase() // This is the last thing that should be destroyed i.e. when the game ends -Rami
@@ -82,7 +87,7 @@ class HangManBase
 
 int main()
 {
-
+	HangManBase ii;
 }
 
 
