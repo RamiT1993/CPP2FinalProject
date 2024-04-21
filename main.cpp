@@ -51,6 +51,10 @@ class HangManBase
 			ifstream WordsDataFile; //using if because it will only input the file and not write over it;
 
 			WordsDataFile.open(HoldFolderLocationplusfile); //Opening the file
+
+			//Using nlohmann json library as done previously because I will not loop through it if theirs already a previously done library.
+			nlohmann::json JsonDataInfoHolder;
+			WordsDataFile >> JsonDataInfoHolder; // Outputting infomation in file to Json as the library will handle the whole outputting of data - Rami 
 		}
 
 
