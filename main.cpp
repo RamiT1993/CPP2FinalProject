@@ -11,6 +11,7 @@
 #include <cctype>
 #include <fstream> //needed for input/output of data
 #include <string>
+#include <iomanip> //Format Editor
 #include <random>
 
 #include "json.hpp"
@@ -57,7 +58,22 @@ class HangManBase
 			WordsDataFile >> JsonDataInfoHolder; // Outputting infomation in file to Json as the library will handle the whole outputting of data - Rami 
 
 			WordsDataFile.close(); //Closing Words Data File As I don't Need to mess with it anymore.
-			cout << JsonDataInfoHolder;
+
+
+			//cout << JsonDataInfoHolder["Words"][2]; //Checking words if inputted correctly
+
+			const size_t JSONTOTALSIZE = JsonDataInfoHolder["Words"].size(); //Keeps the size of the jsonData inside a const to be used later, unchanged
+
+			for (size_t StartingPushingIntoVector = 0; StartingPushingIntoVector < JSONTOTALSIZE; StartingPushingIntoVector++)
+			{
+				DataStorer.push_back(JsonDataInfoHolder["Words"][StartingPushingIntoVector]);
+				//cout << StartingPushingIntoVector << endl;
+			}
+
+			//for (auto& WordChecker : DataStorer)
+			//{
+			//	cout << WordChecker << endl;
+			//}
 
 		}
 
@@ -80,14 +96,21 @@ class HangManBase
 
 //Rami Portion End
 
+//All the stuff will be passed into here so main will only have one function being called;
+void MainFunctSimple()
+{
+	const string HoldWelcome = "Welcome to the Hangman Game";
 
+	cout << setw(50) << setfill('*') << "" << endl
+		<< setw((49 - HoldWelcome.size())/2) << setfill('*') << "" << HoldWelcome << setw((49 - HoldWelcome.size()) / 2) << "" << endl;
 
+}
 
 
 
 int main()
 {
-	HangManBase ii;
+	MainFunctSimple();
 }
 
 
