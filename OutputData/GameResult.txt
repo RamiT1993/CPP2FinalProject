@@ -1,9 +1,0 @@
-Word Guessed : Guessed Successfully
-hi             No 
-hiaaa          Yes 
-hiaaaaa        Yes 
-hiffff         Yes 
-hi             No 
-hiaaaaaaaa     Yes 
-hissss         No 
-hidddd         Yes 
