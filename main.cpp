@@ -174,6 +174,21 @@ class LinkedList
 			return Count;
 		}
 
+		//Output Data To File, Done Before Deletion Automatically.
+		ostream& OutputToFile(ostream& OutputToFile)
+		{
+			T* TempSearch = this->TLinkedListPtr;
+
+			OutputToFile << "Word Guessed : Guessed Successfully" << endl;
+			while (TempSearch->next != nullptr)
+			{
+				string Output = TempSearch->SuccessfullyGuessed == true ? "Yes" : "No";
+				OutputToFile << TempSearch->WordName << setw(16) << "" << Output << setw(1) << "" << endl;
+			}
+
+			return OutputToFile;
+		}
+
 		virtual ~LinkedList()
 		{
 			DeleteRecursive(this->TLinkedListPtr);
@@ -188,13 +203,20 @@ class HangManBase
 	//friend ostream
 	protected:
 		vector<string> HoldWords; //Rami - Holding the words to be used in the Hangman Game
+		LinkedList<LinkedListData> LinkedListTemplateCall; //Template Call for linkedList
 
-		virtual ostream& Output(ostream& Output) //Output to the overloaded ostream operator that outputs not just to the console but to the output file as well.
+
+		virtual ostream& OutputToConsole(ostream& Output) //Output to the overloaded ostream operator that outputs not just to the console but to the output file as well.
 		{
 			return Output;
 		}
 
-		LinkedList<LinkedListData> LinkedListTemplateCall; //Template Call for linkedList
+		 void OutputToFile() //This Outputs to the file when everything is done.
+		{
+			
+		}
+
+		
 
 	public:
 
