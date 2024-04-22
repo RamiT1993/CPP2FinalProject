@@ -30,19 +30,43 @@ using namespace std; //getting rid of annoying std - rami
 
 //Rami Portion Start
 
+
+//Rami-T Creation of the linked list template class to operate the dynamically allocated data and use it for some calculations and outputting.
+template <typename T>
+class LinkedList
+{
+	private:
+		struct LinkedListData
+		{
+			string WordName = "";
+			bool SuccessfullyGuessed = false;
+			LinkedListData* next;
+		};
+
+};
+
 //This base class Purpose is to load the data from the json file located inside of the rootfolder - Rami
 class HangManBase
 {
+	//friend ostream
 	protected:
 		vector<string> HoldWords; //Rami - Holding the words to be used in the Hangman Game
 
+		virtual ostream& Output(ostream& Output) //Output to the overloaded ostream operator that outputs not just to the console but to the output file as well.
+		{
+
+		}
+
+		//Template Operator call here
 
 	public:
 
 
-
+		//overloaded == operator
 
 		//Operation Section
+
+		
 
 		void StoringOfData(vector<string>& DataStorer) //Rami - Operation to store the data, this opens the file and stores the data.
 		{
