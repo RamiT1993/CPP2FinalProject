@@ -100,9 +100,56 @@ class HangManBase
 void MainFunctSimple()
 {
 	const string HoldWelcome = "Welcome to the Hangman Game";
+	const string WantToPlayInitial = "Do you want to play the game? p for yes, q for quitting program : ";
+	char PlayChecker = 'w';
+
+	bool PlayedOnce = false; //Playing the game once allows you to output;
 
 	cout << setw(50) << setfill('*') << "" << endl
-		<< setw((49 - HoldWelcome.size())/2) << setfill('*') << "" << HoldWelcome << setw((49 - HoldWelcome.size()) / 2) << "" << endl;
+		<< setw((49 - HoldWelcome.size()) / 2) << "" << HoldWelcome << setw((49 - HoldWelcome.size()) / 2) << "" << endl
+		<< setw(50) << "" << endl << setw(0) << setfill(' ') << endl;
+
+	cout << WantToPlayInitial;
+	cin >> PlayChecker;
+
+	try
+	{
+		if (PlayChecker != 'p' && PlayChecker != 'P' && PlayChecker != 'q' && PlayChecker != 'Q')
+		{
+			throw exception("Wrong Input: Exiting by default");
+		}
+
+	}
+	catch (exception e)
+	{
+		cout << e.what() << endl;
+		PlayChecker = 'q';
+	}
+
+	while (PlayChecker == 'p' || PlayChecker == 'P')
+	{
+		HangManBase BaseClass;
+		PlayChecker = 'q';
+	}
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
 
 }
 
