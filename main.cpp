@@ -51,7 +51,11 @@ class LinkedList
 		T* TLinkedListPtr;
 
 	public:
+		//This push template class operation, will push into the linked list if you have guessed it correctly
+		void lListPush(string Word, bool Guessed)
+		{
 
+		}
 
 
 };
