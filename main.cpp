@@ -33,7 +33,7 @@ using namespace std; //getting rid of annoying std - rami
 
 //Rami-T Creation of the linked list template class to operate the dynamically allocated data and use it for some calculations and outputting.
 
-//Struct To Hold the linked list data
+//Struct To Hold the linked list data, To be used in template class - Rami
 struct LinkedListData 
 {
 	string WordName = "";
