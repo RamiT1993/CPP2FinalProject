@@ -38,7 +38,7 @@ struct LinkedListData
 {
 	string WordName = "";
 	bool SuccessfullyGuessed = false;
-	LinkedListData* next;
+	LinkedListData* next = nullptr;
 };
 
 
@@ -48,13 +48,49 @@ class LinkedList
 	private:
 
 
-		T* TLinkedListPtr;
+		T* TLinkedListPtr = nullptr; //Must be unchanged because its a pointer to its initial spot
 
 	public:
-		//This push template class operation, will push into the linked list if you have guessed it correctly
+		//This push template class operation, will push into the linked list if you have guessed it correctly or not
 		void lListPush(string Word, bool Guessed)
 		{
 
+			//If empty by default create a new spot in memory from the beginning
+			if (TLinkedList == nullptr)
+			{
+				TLinkedListPtr = new T;
+				TLinkedListPtr->WordName = Word;
+				TLinkedListPtr->SuccessfullyGuessed = Guessed;
+			}
+			//Else sets the temporary ptr of TLinkedListPtr and inserted it at the next location
+			else
+			{
+				T* TempSearcher = TLinkedListPtr;
+
+				while (TempSearcher->next != nullptr)
+				{
+					TempSearcher = TempSearcher->next;
+
+					if (TempSearch->next == nullptr)
+					{
+						TempSearch->next = new T;
+						TempSearch = TempSearch->next;
+						TempSearch->WordName = Word;
+						TempSearch->SuccessfullyGuessed = Guessed;
+					}
+				}
+			}
+		}
+
+		int ReturnTimesWon()
+		{
+			int Count = 0;
+			T* TempSearcher = TLinkedListPtr;
+
+			while (TempSearcher->next != nullptr)
+			{
+
+			}
 		}
 
 
