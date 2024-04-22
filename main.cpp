@@ -112,65 +112,73 @@ class LinkedList
 		}
 
 		//Searches through the list to see the amount of times won.
-		int ReturnTimesWon()
+		int ReturnTimesWon() const
 		{
 			int Count = 0;
 			T* TempSearcher = TLinkedListPtr;
 
-			//makes sure if their are multiple or only 1 in the list it outputs the correct count
-			if (TempSearcher->next != nullptr)
+			if (TempSearcher != nullptr)
 			{
-				while (TempSearcher->next != nullptr)
+				//makes sure if their are multiple or only 1 in the list it outputs the correct count
+				if (TempSearcher->next != nullptr)
 				{
-					if (TempSearcher->SuccessfullyGuessed == true)
-						Count++;
-
-					TempSearcher = TempSearcher->next;
-
-					if (TempSearcher->next == nullptr) //Increments only if the next spot is equal to null ptr and if its true
+					while (TempSearcher->next != nullptr)
+					{
 						if (TempSearcher->SuccessfullyGuessed == true)
 							Count++;
-				} 
 
+						TempSearcher = TempSearcher->next;
+
+						if (TempSearcher->next == nullptr) //Increments only if the next spot is equal to null ptr and if its true
+							if (TempSearcher->SuccessfullyGuessed == true)
+								Count++;
+					}
+
+				}
+				else if (TempSearcher != nullptr && TempSearcher->next == nullptr) //used to make sure theirs only 1 object from the beginning.
+				{
+
+					if (TempSearcher->SuccessfullyGuessed == true)
+						Count++;
+				}
 			}
-			else if (TempSearcher != nullptr && TempSearcher->next == nullptr) //used to make sure theirs only 1 object from the beginning.
-			{
-				
-				if (TempSearcher->SuccessfullyGuessed == true)
-					Count++;
-			}
+
 
 
 			return Count;
 		}
 
 		//Searches through the list to see the amount of times won.
-		int ReturnTimesLost()
+		int ReturnTimesLost() const
 		{
 			int Count = 0;
 			T* TempSearcher = TLinkedListPtr;
 
-			//makes sure if their are multiple or only 1 in the list it outputs the correct count
-			if (TempSearcher->next != nullptr)
+			if (TempSearcher != nullptr)
 			{
-				while (TempSearcher->next != nullptr)
+				//makes sure if their are multiple or only 1 in the list it outputs the correct count
+				if (TempSearcher->next != nullptr)
 				{
-					if (TempSearcher->SuccessfullyGuessed == false)
-						Count++;
-
-					TempSearcher = TempSearcher->next;
-
-					if (TempSearcher->next == nullptr) //Increments only if the next spot is equal to null ptr and if its true
+					while (TempSearcher->next != nullptr)
+					{
 						if (TempSearcher->SuccessfullyGuessed == false)
 							Count++;
+
+						TempSearcher = TempSearcher->next;
+
+						if (TempSearcher->next == nullptr) //Increments only if the next spot is equal to null ptr and if its true
+							if (TempSearcher->SuccessfullyGuessed == false)
+								Count++;
+					}
+
+				}
+				else if (TempSearcher != nullptr && TempSearcher->next == nullptr) //used to make sure theirs only 1 object from the beginning.
+				{
+
+					if (TempSearcher->SuccessfullyGuessed == false)
+						Count++;
 				}
 
-			}
-			else if (TempSearcher != nullptr && TempSearcher->next == nullptr) //used to make sure theirs only 1 object from the beginning.
-			{
-
-				if (TempSearcher->SuccessfullyGuessed == false)
-					Count++;
 			}
 
 
@@ -240,6 +248,15 @@ class LinkedList
 class HangManBase
 {
 	
+	friend ostream& operator<<(ostream& OutputToConsole, const HangManBase& ClassReferenceBase) //overloaded operator that returns only times won/lost
+	{
+
+		string ConsoleOutput = "You have won " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon()) + " times and lost " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost()) + " times!";
+		OutputToConsole << ConsoleOutput << endl;
+		
+
+		return OutputToConsole;
+	}
 
 	private:
 		void OutputToFile() //This Outputs to the file when everything is done.
@@ -254,7 +271,7 @@ class HangManBase
 
 	protected:
 		vector<string> HoldWords; //Rami - Holding the words to be used in the Hangman Game
-		LinkedList<LinkedListData> LinkedListTemplateCall; //Template Call for linkedList
+		
 
 
 		virtual ostream& OutputToConsole(ostream& Output) //Output to the overloaded ostream operator that outputs not just to the console but to the output file as well.
@@ -268,7 +285,7 @@ class HangManBase
 
 	public:
 
-
+		LinkedList<LinkedListData> LinkedListTemplateCall; //Template Call for linkedList
 		//overloaded == operator
 
 		//Operation Section
@@ -381,7 +398,8 @@ int main()
 
 	while (PlayChecker == 'p' || PlayChecker == 'P')
 	{
-		HangManBase BaseClass;
+		//HangManBase BaseClass; //Needs to be switched out with derived class
+		//cout << BaseClass;
 		PlayChecker = 'q';
 		
 	}
