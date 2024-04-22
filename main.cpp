@@ -177,14 +177,47 @@ class LinkedList
 		//Output Data To File, Done Before Deletion Automatically.
 		ostream& OutputToFile(ostream& OutputToFile)
 		{
-			T* TempSearch = this->TLinkedListPtr;
+			T* TempSearcher = this->TLinkedListPtr;
 
 			OutputToFile << "Word Guessed : Guessed Successfully" << endl;
-			while (TempSearch->next != nullptr)
+
+
+
+			//makes sure if their are multiple or only 1 in the list it outputs the correct count
+			if (TempSearcher->next != nullptr)
 			{
-				string Output = TempSearch->SuccessfullyGuessed == true ? "Yes" : "No";
-				OutputToFile << TempSearch->WordName << setw(16) << "" << Output << setw(1) << "" << endl;
+				while (TempSearcher->next != nullptr)
+				{
+
+					string Output = TempSearcher->SuccessfullyGuessed == true ? "Yes" : "No";
+
+
+					OutputToFile << TempSearcher->WordName << setw(15 - TempSearcher->WordName.size()) << setfill(' ') << "" << Output << setw(1) << "" << endl;
+					TempSearcher = TempSearcher->next;
+
+					if (TempSearcher->next == nullptr) 
+					{
+
+						string Output = TempSearcher->SuccessfullyGuessed == true ? "Yes" : "No";
+
+
+						OutputToFile << TempSearcher->WordName << setw(15 - TempSearcher->WordName.size()) << setfill(' ') << "" << Output << setw(1) << "" << endl;
+					}
+
+				}
+
 			}
+			else if (TempSearcher != nullptr && TempSearcher->next == nullptr) //used to make sure theirs only 1 object from the beginning.
+			{
+
+				string Output = TempSearcher->SuccessfullyGuessed == true ? "Yes" : "No";
+				
+
+				OutputToFile << TempSearcher->WordName << setw(15 - TempSearcher->WordName.size()) << setfill(' ') << "" << Output << setw(1) << "" << endl;
+
+			}
+
+
 
 			return OutputToFile;
 		}
@@ -213,7 +246,12 @@ class HangManBase
 
 		 void OutputToFile() //This Outputs to the file when everything is done.
 		{
-			
+			 const string OutputLocation = "OutputData\\GameResult.txt";
+
+			 ofstream OutputFile;
+			 OutputFile.open(OutputLocation);
+
+			 LinkedListTemplateCall.OutputToFile(OutputFile);
 		}
 
 		
@@ -264,16 +302,24 @@ class HangManBase
 		HangManBase()
 		{
 			StoringOfData(this->HoldWords);
-			LinkedListTemplateCall.lListPush("hi", true);
-			LinkedListTemplateCall.lListPush("hi", true);
-			LinkedListTemplateCall.lListPush("hi", true);
-			LinkedListTemplateCall.lListPush("hi", false);
-			LinkedListTemplateCall.lListPush("hi", true);
-			LinkedListTemplateCall.lListPush("hi", true);
-			LinkedListTemplateCall.lListPush("hi", true);
-			LinkedListTemplateCall.lListPush("hi", false);
-			LinkedListTemplateCall.lListPush("hi", true);
-			cout << LinkedListTemplateCall.ReturnTimesLost();
+			//LinkedListTemplateCall.lListPush("hi", false);
+
+			//LinkedListTemplateCall.lListPush("hiaaa", true);
+
+			//LinkedListTemplateCall.lListPush("hiaaaaa", true);
+
+			//LinkedListTemplateCall.lListPush("hiffff", true);
+
+			//LinkedListTemplateCall.lListPush("hi", false);
+
+			//LinkedListTemplateCall.lListPush("hiaaaaaaaa", true);
+
+			//LinkedListTemplateCall.lListPush("hissss", false);
+
+			//LinkedListTemplateCall.lListPush("hidddd", true);
+
+			//cout << LinkedListTemplateCall.ReturnTimesLost();
+			
 
 			
 		}
@@ -282,7 +328,7 @@ class HangManBase
 
 		virtual ~HangManBase() // This is the last thing that should be destroyed i.e. when the game ends -Rami
 		{
-
+			OutputToFile();
 		};
 
 };
