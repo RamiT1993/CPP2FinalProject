@@ -13,7 +13,7 @@
 #include <string>
 #include <iomanip> //Format Editor
 #include <random>
-
+#include <crtdbg.h> //memory management
 #include "json.hpp"
 
 
@@ -41,7 +41,7 @@ struct LinkedListData
 	LinkedListData* next = nullptr;
 };
 
-
+//Creating a linked list.
 template <typename T>
 class LinkedList
 {
@@ -54,44 +54,112 @@ class LinkedList
 		//This push template class operation, will push into the linked list if you have guessed it correctly or not
 		void lListPush(string Word, bool Guessed)
 		{
-
+			
 			//If empty by default create a new spot in memory from the beginning
-			if (TLinkedList == nullptr)
+			if (TLinkedListPtr == nullptr)
 			{
+				
 				TLinkedListPtr = new T;
 				TLinkedListPtr->WordName = Word;
+				
 				TLinkedListPtr->SuccessfullyGuessed = Guessed;
+
+				//TLinkedListPtr->WordName;
 			}
 			//Else sets the temporary ptr of TLinkedListPtr and inserted it at the next location
 			else
 			{
+				
 				T* TempSearcher = TLinkedListPtr;
-
 				while (TempSearcher->next != nullptr)
 				{
 					TempSearcher = TempSearcher->next;
 
-					if (TempSearch->next == nullptr)
-					{
-						TempSearch->next = new T;
-						TempSearch = TempSearch->next;
-						TempSearch->WordName = Word;
-						TempSearch->SuccessfullyGuessed = Guessed;
-					}
+				}
+
+				if (TempSearcher->next == nullptr)
+				{
+					TempSearcher->next = new T;
+					TempSearcher = TempSearcher->next;
+					TempSearcher->WordName = Word;
+					//cout << TLinkedListPtr->WordName << endl;
+					TempSearcher->SuccessfullyGuessed = Guessed;
+
+					//cout << TempSearcher->WordName << endl;
 				}
 			}
 		}
 
+		//Searches through the list to see the amount of times won.
 		int ReturnTimesWon()
 		{
 			int Count = 0;
 			T* TempSearcher = TLinkedListPtr;
 
-			while (TempSearcher->next != nullptr)
+			//makes sure if their are multiple or only 1 in the list it outputs the correct count
+			if (TempSearcher->next != nullptr)
 			{
+				while (TempSearcher->next != nullptr)
+				{
+					if (TempSearcher->SuccessfullyGuessed == true)
+						Count++;
+
+					TempSearcher = TempSearcher->next;
+
+					if (TempSearcher->next == nullptr) //Increments only if the next spot is equal to null ptr and if its true
+						if (TempSearcher->SuccessfullyGuessed == true)
+							Count++;
+				} 
 
 			}
+			else if (TempSearcher != nullptr && TempSearcher->next == nullptr) //used to make sure theirs only 1 object from the beginning.
+			{
+				
+				if (TempSearcher->SuccessfullyGuessed == true)
+					Count++;
+			}
+
+
+			return Count;
 		}
+
+		//Searches through the list to see the amount of times won.
+		int ReturnTimesLost()
+		{
+			int Count = 0;
+			T* TempSearcher = TLinkedListPtr;
+
+			//makes sure if their are multiple or only 1 in the list it outputs the correct count
+			if (TempSearcher->next != nullptr)
+			{
+				while (TempSearcher->next != nullptr)
+				{
+					if (TempSearcher->SuccessfullyGuessed == false)
+						Count++;
+
+					TempSearcher = TempSearcher->next;
+
+					if (TempSearcher->next == nullptr) //Increments only if the next spot is equal to null ptr and if its true
+						if (TempSearcher->SuccessfullyGuessed == false)
+							Count++;
+				}
+
+			}
+			else if (TempSearcher != nullptr && TempSearcher->next == nullptr) //used to make sure theirs only 1 object from the beginning.
+			{
+
+				if (TempSearcher->SuccessfullyGuessed == false)
+					Count++;
+			}
+
+
+			return Count;
+		}
+
+		virtual ~LinkedList()
+		{
+
+		};
 
 
 };
@@ -105,10 +173,10 @@ class HangManBase
 
 		virtual ostream& Output(ostream& Output) //Output to the overloaded ostream operator that outputs not just to the console but to the output file as well.
 		{
-
+			return Output;
 		}
 
-		//Template Operator call here
+		LinkedList<LinkedListData> LinkedListTemplateCall; //Template Call for linkedList
 
 	public:
 
@@ -149,7 +217,6 @@ class HangManBase
 			//{
 			//	cout << WordChecker << endl;
 			//}
-
 		}
 
 
@@ -157,6 +224,18 @@ class HangManBase
 		HangManBase()
 		{
 			StoringOfData(this->HoldWords);
+			LinkedListTemplateCall.lListPush("hi", true);
+			LinkedListTemplateCall.lListPush("hi", true);
+			LinkedListTemplateCall.lListPush("hi", true);
+			LinkedListTemplateCall.lListPush("hi", false);
+			LinkedListTemplateCall.lListPush("hi", true);
+			LinkedListTemplateCall.lListPush("hi", true);
+			LinkedListTemplateCall.lListPush("hi", true);
+			LinkedListTemplateCall.lListPush("hi", false);
+			LinkedListTemplateCall.lListPush("hi", true);
+			cout << LinkedListTemplateCall.ReturnTimesLost();
+
+			
 		}
 		
 
@@ -171,68 +250,47 @@ class HangManBase
 
 //Rami Portion End
 
-//All the stuff will be passed into here so main will only have one function being called;
-void MainFunctSimple()
-{
-	const string HoldWelcome = "Welcome to the Hangman Game";
-	const string WantToPlayInitial = "Do you want to play the game? p for yes, q for quitting program : ";
-	char PlayChecker = 'w';
-
-	bool PlayedOnce = false; //Playing the game once allows you to output;
-
-	cout << setw(50) << setfill('*') << "" << endl
-		<< setw((49 - HoldWelcome.size()) / 2) << "" << HoldWelcome << setw((49 - HoldWelcome.size()) / 2) << "" << endl
-		<< setw(50) << "" << endl << setw(0) << setfill(' ') << endl;
-
-	cout << WantToPlayInitial;
-	cin >> PlayChecker;
-
-	try
-	{
-		if (PlayChecker != 'p' && PlayChecker != 'P' && PlayChecker != 'q' && PlayChecker != 'Q')
-		{
-			throw exception("Wrong Input: Exiting by default");
-		}
-
-	}
-	catch (exception e)
-	{
-		cout << e.what() << endl;
-		PlayChecker = 'q';
-	}
-
-	while (PlayChecker == 'p' || PlayChecker == 'P')
-	{
-		HangManBase BaseClass;
-		PlayChecker = 'q';
-	}
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-
-
-
-}
 
 
 
 int main()
 {
-	MainFunctSimple();
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF); //Memory Management
+	//const string HoldWelcome = "Welcome to the Hangman Game";
+	//const string WantToPlayInitial = "Do you want to play the game? p for yes, q for quitting program : ";
+	//char PlayChecker = 'w';
+
+	//bool PlayedOnce = false; //Playing the game once allows you to output;
+
+	//cout << setw(50) << setfill('*') << "" << endl
+	//	<< setw((49 - HoldWelcome.size()) / 2) << "" << HoldWelcome << setw((49 - HoldWelcome.size()) / 2) << "" << endl
+	//	<< setw(50) << "" << endl << setw(0) << setfill(' ') << endl;
+
+	//cout << WantToPlayInitial;
+	//cin >> PlayChecker;
+
+	//try
+	//{
+	//	if (PlayChecker != 'p' && PlayChecker != 'P' && PlayChecker != 'q' && PlayChecker != 'Q')
+	//	{
+	//		throw exception("Wrong Input: Exiting by default");
+	//	}
+
+	//}
+	//catch (exception e)
+	//{
+	//	cout << e.what() << endl;
+	//	PlayChecker = 'q';
+	//}
+
+	//while (PlayChecker == 'p' || PlayChecker == 'P')
+	//{
+	//	HangManBase BaseClass();
+	//	
+	//}
+	
+
+	HangManBase BaseClass;
 }
 
 
