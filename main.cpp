@@ -49,6 +49,24 @@ class LinkedList
 
 
 		T* TLinkedListPtr = nullptr; //Must be unchanged because its a pointer to its initial spot
+		void DeleteRecursive(T* LinkedPtrOriginStart) //Recursive Delete that starts at the first pointer of origin start and recursively enters until a nullptr that doesn't exist enter; - Rami
+		{
+			T* LinkedNext;
+
+			if (LinkedPtrOriginStart->next != nullptr)
+			{
+				LinkedNext = LinkedPtrOriginStart->next;
+				delete LinkedPtrOriginStart;
+				LinkedPtrOriginStart = nullptr;
+				DeleteRecursive(LinkedNext);
+			}
+			else
+			{
+				delete LinkedPtrOriginStart;
+				LinkedPtrOriginStart = nullptr;
+			}
+
+		}
 
 	public:
 		//This push template class operation, will push into the linked list if you have guessed it correctly or not
@@ -158,7 +176,7 @@ class LinkedList
 
 		virtual ~LinkedList()
 		{
-
+			DeleteRecursive(this->TLinkedListPtr);
 		};
 
 
