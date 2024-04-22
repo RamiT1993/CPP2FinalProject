@@ -52,19 +52,22 @@ class LinkedList
 		void DeleteRecursive(T* LinkedPtrOriginStart) //Recursive Delete that starts at the first pointer of origin start and recursively enters until a nullptr that doesn't exist enter; - Rami
 		{
 			T* LinkedNext;
+			if (LinkedPtrOriginStart != nullptr)
+			{
+				if (LinkedPtrOriginStart->next != nullptr)
+				{
+					LinkedNext = LinkedPtrOriginStart->next;
+					delete LinkedPtrOriginStart;
+					LinkedPtrOriginStart = nullptr;
+					DeleteRecursive(LinkedNext);
+				}
+				else
+				{
+					delete LinkedPtrOriginStart;
+					LinkedPtrOriginStart = nullptr;
+				}
+			}
 
-			if (LinkedPtrOriginStart->next != nullptr)
-			{
-				LinkedNext = LinkedPtrOriginStart->next;
-				delete LinkedPtrOriginStart;
-				LinkedPtrOriginStart = nullptr;
-				DeleteRecursive(LinkedNext);
-			}
-			else
-			{
-				delete LinkedPtrOriginStart;
-				LinkedPtrOriginStart = nullptr;
-			}
 
 		}
 
@@ -182,40 +185,43 @@ class LinkedList
 			OutputToFile << "Word Guessed : Guessed Successfully" << endl;
 
 
-
-			//makes sure if their are multiple or only 1 in the list it outputs the correct count
-			if (TempSearcher->next != nullptr)
+			if (TempSearcher != nullptr)
 			{
-				while (TempSearcher->next != nullptr)
+				//makes sure if their are multiple or only 1 in the list it outputs the correct count
+				if (TempSearcher->next != nullptr)
 				{
-
-					string Output = TempSearcher->SuccessfullyGuessed == true ? "Yes" : "No";
-
-
-					OutputToFile << TempSearcher->WordName << setw(15 - TempSearcher->WordName.size()) << setfill(' ') << "" << Output << setw(1) << "" << endl;
-					TempSearcher = TempSearcher->next;
-
-					if (TempSearcher->next == nullptr) 
+					while (TempSearcher->next != nullptr)
 					{
 
 						string Output = TempSearcher->SuccessfullyGuessed == true ? "Yes" : "No";
 
 
 						OutputToFile << TempSearcher->WordName << setw(15 - TempSearcher->WordName.size()) << setfill(' ') << "" << Output << setw(1) << "" << endl;
+						TempSearcher = TempSearcher->next;
+
+						if (TempSearcher->next == nullptr)
+						{
+
+							string Output = TempSearcher->SuccessfullyGuessed == true ? "Yes" : "No";
+
+
+							OutputToFile << TempSearcher->WordName << setw(15 - TempSearcher->WordName.size()) << setfill(' ') << "" << Output << setw(1) << "" << endl;
+						}
+
 					}
 
 				}
+				else if (TempSearcher != nullptr && TempSearcher->next == nullptr) //used to make sure theirs only 1 object from the beginning.
+				{
 
+					string Output = TempSearcher->SuccessfullyGuessed == true ? "Yes" : "No";
+
+
+					OutputToFile << TempSearcher->WordName << setw(15 - TempSearcher->WordName.size()) << setfill(' ') << "" << Output << setw(1) << "" << endl;
+
+				}
 			}
-			else if (TempSearcher != nullptr && TempSearcher->next == nullptr) //used to make sure theirs only 1 object from the beginning.
-			{
 
-				string Output = TempSearcher->SuccessfullyGuessed == true ? "Yes" : "No";
-				
-
-				OutputToFile << TempSearcher->WordName << setw(15 - TempSearcher->WordName.size()) << setfill(' ') << "" << Output << setw(1) << "" << endl;
-
-			}
 
 
 
@@ -233,7 +239,19 @@ class LinkedList
 //This base class Purpose is to load the data from the json file located inside of the rootfolder - Rami
 class HangManBase
 {
-	//friend ostream
+	
+
+	private:
+		void OutputToFile() //This Outputs to the file when everything is done.
+		{
+			const string OutputLocation = "OutputData\\GameResult.txt";
+
+			ofstream OutputFile;
+			OutputFile.open(OutputLocation);
+
+			LinkedListTemplateCall.OutputToFile(OutputFile);
+		};
+
 	protected:
 		vector<string> HoldWords; //Rami - Holding the words to be used in the Hangman Game
 		LinkedList<LinkedListData> LinkedListTemplateCall; //Template Call for linkedList
@@ -244,15 +262,7 @@ class HangManBase
 			return Output;
 		}
 
-		 void OutputToFile() //This Outputs to the file when everything is done.
-		{
-			 const string OutputLocation = "OutputData\\GameResult.txt";
-
-			 ofstream OutputFile;
-			 OutputFile.open(OutputLocation);
-
-			 LinkedListTemplateCall.OutputToFile(OutputFile);
-		}
+		 
 
 		
 
@@ -342,41 +352,42 @@ class HangManBase
 int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF); //Memory Management
-	//const string HoldWelcome = "Welcome to the Hangman Game";
-	//const string WantToPlayInitial = "Do you want to play the game? p for yes, q for quitting program : ";
-	//char PlayChecker = 'w';
+	const string HoldWelcome = "Welcome to the Hangman Game";
+	const string WantToPlayInitial = "Do you want to play the game? p for yes, q for quitting program : ";
+	char PlayChecker = 'w';
 
-	//bool PlayedOnce = false; //Playing the game once allows you to output;
+	bool PlayedOnce = false; //Playing the game once allows you to output;
 
-	//cout << setw(50) << setfill('*') << "" << endl
-	//	<< setw((49 - HoldWelcome.size()) / 2) << "" << HoldWelcome << setw((49 - HoldWelcome.size()) / 2) << "" << endl
-	//	<< setw(50) << "" << endl << setw(0) << setfill(' ') << endl;
+	cout << setw(50) << setfill('*') << "" << endl
+		<< setw((49 - HoldWelcome.size()) / 2) << "" << HoldWelcome << setw((49 - HoldWelcome.size()) / 2) << "" << endl
+		<< setw(50) << "" << endl << setw(0) << setfill(' ') << endl;
 
-	//cout << WantToPlayInitial;
-	//cin >> PlayChecker;
+	cout << WantToPlayInitial;
+	cin >> PlayChecker;
 
-	//try
-	//{
-	//	if (PlayChecker != 'p' && PlayChecker != 'P' && PlayChecker != 'q' && PlayChecker != 'Q')
-	//	{
-	//		throw exception("Wrong Input: Exiting by default");
-	//	}
+	try
+	{
+		if (PlayChecker != 'p' && PlayChecker != 'P' && PlayChecker != 'q' && PlayChecker != 'Q')
+		{
+			throw exception("Wrong Input: Exiting by default");
+		}
 
-	//}
-	//catch (exception e)
-	//{
-	//	cout << e.what() << endl;
-	//	PlayChecker = 'q';
-	//}
+	}
+	catch (exception e)
+	{
+		cout << e.what() << endl;
+		PlayChecker = 'q';
+	}
 
-	//while (PlayChecker == 'p' || PlayChecker == 'P')
-	//{
-	//	HangManBase BaseClass();
-	//	
-	//}
+	while (PlayChecker == 'p' || PlayChecker == 'P')
+	{
+		HangManBase BaseClass;
+		PlayChecker = 'q';
+		
+	}
 	
 
-	HangManBase BaseClass;
+	
 }
 
 
