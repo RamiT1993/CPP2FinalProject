@@ -244,6 +244,33 @@ class LinkedList
 
 };
 
+// WordManager class that will handle the sorting of words by length and alphabetical order - Tajwar R
+class WordManager {
+public:
+    // Sorts the words vector alphabetically
+    void sortWordsAlphabetically(vector<string>& words) {
+        sort(words.begin(), words.end());
+    }
+
+    // Sorts the words vector by word length
+    void sortWordsByLength(vector<string>& words) {
+        sort(words.begin(), words.end(), [](const string& a, const string& b) {
+            return a.length() < b.length();
+        });
+    }
+
+    // Returns the total number of words in the vector
+    size_t countWords(const vector<string>& words) const {
+        return words.size();
+    }
+
+    // Returns the number of unique words in the vector
+    size_t countUniqueWords(const vector<string>& words) const {
+        set<string> uniqueWords(words.begin(), words.end());
+        return uniqueWords.size();
+    }
+};
+
 //This base class Purpose is to load the data from the json file located inside of the rootfolder - Rami
 class HangManBase
 {
@@ -358,6 +385,25 @@ class HangManBase
 			OutputToFile();
 		};
 
+		// Methods for sorting words using WordManager - Tajwar R
+		    void sortWordsAlphabetically() {
+		        wordManager.sortWordsAlphabetically(holdWords);
+		    }
+		
+		    void sortWordsByLength() {
+		        wordManager.sortWordsByLength(holdWords);
+		    }
+		
+		    // Aggregation methods using WordManager
+		    size_t countWords() const {
+		        return wordManager.countWords(holdWords);
+		    }
+		
+		    size_t countUniqueWords() const {
+		        return wordManager.countUniqueWords(holdWords);
+		    }
+
+		
 };
 
 
