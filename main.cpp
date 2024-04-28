@@ -244,32 +244,6 @@ class LinkedList
 
 };
 
-// WordManager class that will handle the sorting of words by length and alphabetical order - Tajwar R
-class WordManager {
-public:
-    // Sorts the words vector alphabetically
-    void sortWordsAlphabetically(vector<string>& words) {
-        sort(words.begin(), words.end());
-    }
-
-    // Sorts the words vector by word length
-    void sortWordsByLength(vector<string>& words) {
-        sort(words.begin(), words.end(), [](const string& a, const string& b) {
-            return a.length() < b.length();
-        });
-    }
-
-    // Returns the total number of words in the vector
-    size_t countWords(const vector<string>& words) const {
-        return words.size();
-    }
-
-    // Returns the number of unique words in the vector
-    size_t countUniqueWords(const vector<string>& words) const {
-        set<string> uniqueWords(words.begin(), words.end());
-        return uniqueWords.size();
-    }
-};
 
 //This base class Purpose is to load the data from the json file located inside of the rootfolder - Rami
 class HangManBase
@@ -385,23 +359,28 @@ class HangManBase
 			OutputToFile();
 		};
 
-		// Methods for sorting words using WordManager - Tajwar R
-		    void sortWordsAlphabetically() {
-		        wordManager.sortWordsAlphabetically(holdWords);
-		    }
+
+
+
+		//ALL the methods need to handled in the aggregation class, it shouldn't be in the base class
+		// 
+		//// Methods for sorting words using WordManager - Tajwar R
+		//    void sortWordsAlphabetically() {
+		//        wordManager.sortWordsAlphabetically(holdWords);
+		//    }
+		//
+		//    void sortWordsByLength() {
+		//        wordManager.sortWordsByLength(holdWords);
+		//    }
+		//
+		//    // Aggregation methods using WordManager
+		//    size_t countWords() const {
+		//        return wordManager.countWords(holdWords);
+		//    }
 		
-		    void sortWordsByLength() {
-		        wordManager.sortWordsByLength(holdWords);
-		    }
-		
-		    // Aggregation methods using WordManager
-		    size_t countWords() const {
-		        return wordManager.countWords(holdWords);
-		    }
-		
-		    size_t countUniqueWords() const {
-		        return wordManager.countUniqueWords(holdWords);
-		    }
+		    //size_t countUniqueWords() const {
+		    //    return wordManager.countUniqueWords(holdWords);
+		    //}
 
 		
 };
@@ -409,8 +388,35 @@ class HangManBase
 
 //Rami Portion End
 
+//This should be location after the derived/base class - rami t
+// WordManager class that will handle the sorting of words by length and alphabetical order - Tajwar R
+class WordManager {
+public:
+	// Sorts the words vector alphabetically
+	void sortWordsAlphabetically(vector<string>& words) {
+		sort(words.begin(), words.end());
+	}
+
+	// Sorts the words vector by word length
+	void sortWordsByLength(vector<string>& words) {
+		sort(words.begin(), words.end(), [](const string& a, const string& b) {
+			return a.length() < b.length();
+			});
+	}
+
+	// Returns the total number of words in the vector
+	size_t countWords(const vector<string>& words) const {
+		return words.size();
+	}
 
 
+	//Don't need this because all of them are unique because this is hangman - rami t
+	//// Returns the number of unique words in the vector
+	//size_t countUniqueWords(const vector<string>& words) const {
+	//    set<string> uniqueWords(words.begin(), words.end());
+	//    return uniqueWords.size();
+	//}
+};
 
 int main()
 {
@@ -418,6 +424,7 @@ int main()
 	const string HoldWelcome = "Welcome to the Hangman Game";
 	const string WantToPlayInitial = "Do you want to play the game? p for yes, q for quitting program : ";
 	char PlayChecker = 'w';
+	bool OnlySortOnce = false;
 
 	bool PlayedOnce = false; //Playing the game once allows you to output;
 
@@ -444,14 +451,62 @@ int main()
 
 	while (PlayChecker == 'p' || PlayChecker == 'P')
 	{
-		//HangManBase BaseClass; //Needs to be switched out with derived class
+		HangManBase BaseClass; //Needs to be switched out with derived class
 		//cout << BaseClass;
-		PlayChecker = 'q';
-		
-	}
-	
+		//PlayChecker = 'q';
 
-	
+
+		if (OnlySortOnce == false)
+		{
+
+
+			char SortingOfWords = 0;
+
+			cout << "How would you like to sort the words? a(alphabetical), l(length), or unsorted(u):";
+			cin >> SortingOfWords;
+
+			try
+			{
+				if (SortingOfWords != 'a' && SortingOfWords != 'l' && SortingOfWords != 'u')
+				{
+					throw exception("Incorrect Entry Inputted, Keeping Words Unsorted");
+				}
+			}
+			catch (exception e)
+			{
+				cout << e.what();
+				SortingOfWords = 'u';
+
+			}
+
+			//Done to constantly deallocate the aggregate - rami t
+			{
+				WordManager SorterSystem(BaseClass);
+				switch (SortingOfWords)
+				{
+				case 'a':
+
+					SorterSystem.sortWordsAlphabetically();
+					OnlySortOnce = true;
+					break;
+				case 'l':
+					OnlySortOnce = true;
+
+					SorterSystem.sortWordsByLength();
+					break;
+				case 'u': //keeps it unsorted
+				default:
+					break;
+				}
+			}
+		}
+
+
+
+	}
+
+
+
 }
 
 
