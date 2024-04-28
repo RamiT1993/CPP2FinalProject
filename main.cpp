@@ -271,7 +271,7 @@ class HangManBase
 		};
 
 	protected:
-		vector<string> HoldWords; //Rami - Holding the words to be used in the Hangman Game
+		
 		
 
 
@@ -290,7 +290,7 @@ class HangManBase
 		//overloaded == operator
 
 		//Operation Section
-
+		vector<string> HoldWords; //Rami - Holding the words to be used in the Hangman Game
 		
 
 		void StoringOfData(vector<string>& DataStorer) //Rami - Operation to store the data, this opens the file and stores the data.
