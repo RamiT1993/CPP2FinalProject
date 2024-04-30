@@ -52,7 +52,7 @@ class LinkedList
 		T* TLinkedListPtr = nullptr; //Must be unchanged because its a pointer to its initial spot
 		void DeleteRecursive(T* LinkedPtrOriginStart) //Recursive Delete that starts at the first pointer of origin start and recursively enters until a nullptr that doesn't exist enter; - Rami
 		{
-			
+			//Classic Primitive Looping through and deleting the recursive list
 			T* LinkedNext;
 			if (LinkedPtrOriginStart != nullptr)
 			{
@@ -187,16 +187,17 @@ class LinkedList
 			return Count;
 		}
 
-		void Return()
-		{
-			T* Temp = TLinkedListPtr;
+		//Going through the return
+		//void Return()
+		//{
+		//	T* Temp = TLinkedListPtr;
 
-			while (Temp->next != nullptr)
-			{
-				cout << Temp->WordName << endl;
-			}
-			
-		}
+		//	while (Temp->next != nullptr)
+		//	{
+		//		cout << Temp->WordName << endl;
+		//	}
+		//	
+		//}
 
 		//Output Data To File, Done Before Deletion Automatically.
 		ostream& OutputToFile(ostream& OutputToFile)
@@ -261,7 +262,7 @@ class LinkedList
 //This base class Purpose is to load the data from the json file located inside of the rootfolder - Rami
 class HangManBase
 {
-	
+	//Overloader operator makes it easier to output to the console
 	friend ostream& operator<<(ostream& OutputToConsole, const HangManBase& ClassReferenceBase) //overloaded operator that returns only times won/lost
 	{
 
@@ -276,7 +277,7 @@ class HangManBase
 
 	protected:
 		
-		// Have someone allowed them to choose a name in the game class
+		// basic Output with no file selected
 		virtual void OutputToFile() //This Outputs to the file when everything is done.
 		{
 			const string OutputLocation = "OutputData\\GameResult.txt";
@@ -296,7 +297,7 @@ class HangManBase
 	public:
 
 		LinkedList<LinkedListData> LinkedListTemplateCall; //Template Call for linkedList
-		//overloaded == operator
+		
 
 		//Operation Section
 		vector<string> HoldWords; //Rami - Holding the words to be used in the Hangman Game
@@ -479,6 +480,10 @@ public:
 			cout << endl;
 			cout << "Enter a letter guess: ";
 			cin >> guess;
+
+			//Add a checker system here
+
+
 			guess = tolower(guess); // Convert to lowercase for consistency
 			if (isLetterGuessed(guess)) {
 				cout << "You've already guessed that letter!" << endl;
@@ -513,7 +518,7 @@ public:
 	}
 	virtual ~HangManGame()
 	{
-		
+		//initializeGame(); removed because called in main
 	}
 };
 
@@ -537,7 +542,7 @@ public:
 	};
 
 
-	//We Shouldn't Be displaying the words at all - rami t
+	//We Shouldn't Be displaying the words at all, if people want to search the word their can look at the json file - rami t
 	//void DisplayWords(vector<string>& Words)
 	//{
 	//	const int COLUMN_SIZE = 3;
@@ -557,7 +562,7 @@ public:
 		//DisplayWords(words);
 	}
 
-	// Sorts the words vector by word length
+	// Sorts the words vector by word length, change the magic numbers/letters - rami t
 	void sortWordsByLength() {
 		sort(PtrGameHold->HoldWords.begin(), PtrGameHold->HoldWords.end(), [](const string& a, const string& b) {
 			return a.length() < b.length();
@@ -572,7 +577,7 @@ public:
 	}
 
 
-	//Don't need this because all of them are unique because this is hangman - rami t
+	//Don't need this because all of them are unique because this is hangman, and we havent use set before - rami t
 	//// Returns the number of unique words in the vector
 	//size_t countUniqueWords(const vector<string>& words) const {
 	//    set<string> uniqueWords(words.begin(), words.end());
@@ -586,7 +591,7 @@ int main()
 	const string HoldWelcome = "Welcome to the Hangman Game";
 	string WantToPlay = "Do you want to play the game? p for yes, v to sort the possible words, or q for quitting program  : ";
 	char PlayChecker = 'w';
-	bool OnlySortOnce = false;
+	bool OnlySortOnce = false; //Only sorts the game once
 	
 	bool PlayedOnce = false; //Playing the game once allows you to output;
 	
