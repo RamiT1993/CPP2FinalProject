@@ -400,22 +400,26 @@ class HangManBase
 class HangManGame : public HangManBase {
 
 
-	//virtual function that overloads from its previous version
+	//virtual function that overloads from its previous version, Hussein and Rami Fixed This Code Together
 	friend ostream& operator<<(ostream& OutputToConsole, const HangManGame& ClassReferenceBase) //overloaded operator that returns only times won/lost
 	{
-		cout << ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost();
-		double Average = 0;
-		if (ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost() == 0)
-			Average = 0;
-		else
-		{
-			Average = ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() / (ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost());
-		}
-		
-		//double Average = ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() / (ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost());
-		string ConsoleOutput = "You have won " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon()) + " times and lost " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost()) + " times!\n" + "Average is: " + to_string(Average);
+		//cout << ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost();
 
-		OutputToConsole << ConsoleOutput << endl;
+		int Denom = ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost();
+		double Average = 0;
+		if (Denom == 0 && ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() <= 0) {
+			Average = 0;
+		}	
+		else {
+			Average = static_cast<double>(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon()) / static_cast<double>(Denom);
+		}
+		//cout << 0 / 1 << endl;
+		//double Average = ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() / (ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost());
+		
+		string ConsoleOutput = "You have won " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon()) + " times and lost " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost()) + " times!\n" + "Average is: ";
+
+		OutputToConsole << ConsoleOutput;
+		OutputToConsole << fixed << setprecision(2) << Average << "%" << endl;
 
 
 		return OutputToConsole;
@@ -427,7 +431,7 @@ private:
 	string secretWord;
 	string guessedWord;
 	int maxAttempts;
-	int Difficulty = 1;
+	
 	int remainingAttempts;
 	vector<string> HangManASCII;
 	vector<char> guessedLetters;
@@ -517,16 +521,17 @@ private:
 
 public:
 
-	void operator++()
-	{
+	//Purpose of this operator++ prefix overloader is to initialize the game and then play it without accessing the member functions directly.
+	void operator++(){
+
 		initializeGame();
 		playGame();
 
 	}
 
 
-	virtual ~HangManGame()
-	{
+	virtual ~HangManGame(){
+
 		//initializeGame(); removed because called in main
 	}
 };
@@ -542,6 +547,7 @@ public:
 
 //We agreed upon this is how WordManager Should look like.
 // WordManager class that will handle the sorting of words by length and alphabetical order - Tajwar R
+//A Couple of issues that Hussein/Tajwar fixed the code so it could be run successfully
 class WordManager {
 public:
 	HangManGame* PtrGameHold = nullptr;
@@ -552,22 +558,24 @@ public:
 
 
 	//We Shouldn't Be displaying the words at all, if people want to search the word their can look at the json file - rami t
-	//void DisplayWords(vector<string>& Words)
-	//{
-	//	const int COLUMN_SIZE = 3;
-	//	int counter = 0;
-	//	for (auto word : Words)
-	//	{
-	//		cout << left <<setw(15) << word  << "\t";
-	//		counter++;
-	//		if (counter % 3 == 0) {
-	//			cout << endl;
-	//		}
-	//	}
-	//}
+	void DisplayWords()
+	{
+		const int COLUMN_SIZE = 3;
+		int counter = 0;
+		for (auto& word : this->PtrGameHold->HoldWords)
+		{
+			cout << left <<setw(15) << word  << "\t";
+			counter++;
+			if (counter % 3 == 0) {
+				cout << endl;
+			}
+		}
+		cout << endl;
+	}
 	// Sorts the words vector alphabetically
 	void sortWordsAlphabetically() {
 		sort(PtrGameHold->HoldWords.begin(), PtrGameHold->HoldWords.end());
+		DisplayWords();
 		//DisplayWords(words);
 	}
 
@@ -576,6 +584,7 @@ public:
 		sort(PtrGameHold->HoldWords.begin(), PtrGameHold->HoldWords.end(), [](const string& a, const string& b) {
 			return a.length() < b.length();
 			});
+		DisplayWords();
 		//DisplayWords(words);
 
 	}
@@ -615,7 +624,7 @@ int main()
 
 	while (PlayChecker != 'q')
 	{
-		
+		string ErrorCode;
 
 		cout << WantToPlay;
 		cin >> PlayChecker;
@@ -631,20 +640,29 @@ int main()
 			}
 			else if (PlayChecker != 'p' && PlayChecker != 'q' && OnlySortOnce == true)
 			{
-				throw exception("Replaying Game");
+				throw logic_error("Replaying Game");
 			}
 
+		}
+		catch (logic_error e)
+		{
+			cout << e.what() << endl;
+			PlayChecker = 'p';
 		}
 		catch (exception e)
 		{
 			//making sure in the beginning program exit if incorrect but after the first time it just replays the game - rami
 			cout << e.what() << endl;
-			if (e.what() == "Wrong Input: Exiting by default")
-				PlayChecker = 'q';
-			else if (e.what() == "Replaying Game")
-				PlayChecker = 'p';
+
+			PlayChecker = 'q';
+			
+				
+			//else if (ErrorChecker == "Replaying Game")
+			//	PlayChecker = 'p';
 			cin.ignore(100, '\n');
 			cin.clear();
+
+			cout << PlayChecker << endl;
 		}
 
 		//This Activates only once

@@ -1,4 +1,2 @@
 Word Guessed : Guessed Successfully
-pennyworth     No 
-pizza          No 
-jimjams        No 
+buzz           No 
