@@ -81,7 +81,7 @@ class LinkedList
 			//If empty by default create a new spot in memory from the beginning
 			if (TLinkedListPtr == nullptr)
 			{
-				cout << "hi" << endl;
+				//cout << "hi" << endl;
 				TLinkedListPtr = new T;
 				TLinkedListPtr->WordName = Word;
 				
@@ -92,7 +92,7 @@ class LinkedList
 			//Else sets the temporary ptr of TLinkedListPtr and inserted it at the next location
 			else
 			{
-				cout << "byue" << endl;
+				//cout << "byue" << endl;
 				T* TempSearcher = TLinkedListPtr;
 				while (TempSearcher->next != nullptr)
 				{
@@ -396,7 +396,7 @@ class HangManBase
 };
 
 
-
+//As agreed upon between hussein and rami, we will edit the hangman game to include operator ++ (prefix)
 class HangManGame : public HangManBase {
 
 
@@ -421,10 +421,13 @@ class HangManGame : public HangManBase {
 		return OutputToConsole;
 	}
 
+
+
 private:
 	string secretWord;
 	string guessedWord;
 	int maxAttempts;
+	int Difficulty = 1;
 	int remainingAttempts;
 	vector<string> HangManASCII;
 	vector<char> guessedLetters;
@@ -448,7 +451,6 @@ private:
 		cout << HangManASCII[incorrectGuesses];
 	}
 
-public:
 	void initializeGame() {
 		srand(static_cast<unsigned int>(time(nullptr)));
 		int randomIndex = rand() % HoldWords.size();
@@ -459,17 +461,13 @@ public:
 		guessedLetters.clear();
 	}
 
-	HangManGame() {
-		initializeGame();
-	}
-
 	void playGame() {
 		char guess;
 		cout << "Welcome to Hangman!\n";
 		//Main game loop
 		while (!isGameOver()) {
 			printHangman(maxAttempts - remainingAttempts);
-			
+
 			cout << "Secret Word: " << guessedWord << endl;
 			cout << "Remaining Attempts: " << remainingAttempts << endl;
 
@@ -516,6 +514,17 @@ public:
 			//LinkedListTemplateCall.Return();
 		}
 	}
+
+public:
+
+	void operator++()
+	{
+		initializeGame();
+		playGame();
+
+	}
+
+
 	virtual ~HangManGame()
 	{
 		//initializeGame(); removed because called in main
@@ -691,9 +700,9 @@ int main()
 		}
 		else if (PlayChecker == 'p')
 		{
-			game.playGame();
+			++game; //Operator overload ++ prefix to play the game
 			WantToPlay = "Do you want to play the game? p for yes or q for quitting program  : ";
-			game.initializeGame();
+			
 		}
 		else if (PlayChecker == 'q')
 		{
