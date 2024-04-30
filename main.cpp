@@ -416,7 +416,7 @@ class HangManGame : public HangManBase {
 		//cout << 0 / 1 << endl;
 		//double Average = ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() / (ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost());
 		
-		string ConsoleOutput = "You have won " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon()) + " times and lost " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost()) + " times!\n" + "Average is: ";
+		string ConsoleOutput = "You have won " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon()) + " times and lost " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost()) + " times!\n" + "Average Win Rate is: ";
 
 		OutputToConsole << ConsoleOutput;
 		OutputToConsole << fixed << setprecision(2) << Average << "%" << endl;
