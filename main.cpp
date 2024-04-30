@@ -20,6 +20,7 @@
 using namespace std; //getting rid of annoying std - rami
 
 //We all started fixing others codes because of the amount of bugs in each other code. Like mine had an issue with the linked list, hussein had an issue where it was exiting early, tajwar had issues implementing the composition.
+//We didn't have enough time so everyone was helping each other with their work.
 
 /*also when you sort allow the user to sort based on length or alphabetical nature*/
 
