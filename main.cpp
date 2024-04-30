@@ -607,7 +607,7 @@ int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF); //Memory Management
 	const string HoldWelcome = "Welcome to the Hangman Game";
-	string WantToPlay = "Do you want to play the game? p for yes, v to sort the possible words, or q for quitting program  : ";
+	string WantToPlay = "Do you want to play the game? p for yes, v to sort the possible words and display the words, or q for quitting program  : ";
 	char PlayChecker = 'w';
 	bool OnlySortOnce = false; //Only sorts the game once
 	
