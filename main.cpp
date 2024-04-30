@@ -19,7 +19,7 @@
 
 using namespace std; //getting rid of annoying std - rami
 
-
+//We all started fixing others codes because of the amount of bugs in each other code. Like mine had an issue with the linked list, hussein had an issue where it was exiting early, tajwar had issues implementing the composition.
 
 /*also when you sort allow the user to sort based on length or alphabetical nature*/
 
@@ -28,7 +28,7 @@ using namespace std; //getting rid of annoying std - rami
 
 
 
-//Rami Portion Start
+
 
 
 //Rami-T Creation of the linked list template class to operate the dynamically allocated data and use it for some calculations and outputting.
@@ -51,6 +51,7 @@ class LinkedList
 		T* TLinkedListPtr = nullptr; //Must be unchanged because its a pointer to its initial spot
 		void DeleteRecursive(T* LinkedPtrOriginStart) //Recursive Delete that starts at the first pointer of origin start and recursively enters until a nullptr that doesn't exist enter; - Rami
 		{
+			
 			T* LinkedNext;
 			if (LinkedPtrOriginStart != nullptr)
 			{
@@ -79,18 +80,18 @@ class LinkedList
 			//If empty by default create a new spot in memory from the beginning
 			if (TLinkedListPtr == nullptr)
 			{
-				
+				cout << "hi" << endl;
 				TLinkedListPtr = new T;
 				TLinkedListPtr->WordName = Word;
 				
 				TLinkedListPtr->SuccessfullyGuessed = Guessed;
 
-				//TLinkedListPtr->WordName;
+				//Return();
 			}
 			//Else sets the temporary ptr of TLinkedListPtr and inserted it at the next location
 			else
 			{
-				
+				cout << "byue" << endl;
 				T* TempSearcher = TLinkedListPtr;
 				while (TempSearcher->next != nullptr)
 				{
@@ -105,7 +106,7 @@ class LinkedList
 					TempSearcher->WordName = Word;
 					//cout << TLinkedListPtr->WordName << endl;
 					TempSearcher->SuccessfullyGuessed = Guessed;
-
+					//Return();
 					//cout << TempSearcher->WordName << endl;
 				}
 			}
@@ -185,6 +186,17 @@ class LinkedList
 			return Count;
 		}
 
+		void Return()
+		{
+			T* Temp = TLinkedListPtr;
+
+			while (Temp->next != nullptr)
+			{
+				cout << Temp->WordName << endl;
+			}
+			
+		}
+
 		//Output Data To File, Done Before Deletion Automatically.
 		ostream& OutputToFile(ostream& OutputToFile)
 		{
@@ -259,8 +271,12 @@ class HangManBase
 		return OutputToConsole;
 	}
 
-	private:
-		void OutputToFile() //This Outputs to the file when everything is done.
+
+
+	protected:
+		
+		// Have someone allowed them to choose a name in the game class
+		virtual void OutputToFile() //This Outputs to the file when everything is done.
 		{
 			const string OutputLocation = "OutputData\\GameResult.txt";
 
@@ -268,17 +284,9 @@ class HangManBase
 			OutputFile.open(OutputLocation);
 
 			LinkedListTemplateCall.OutputToFile(OutputFile);
+
 		};
 
-	protected:
-		
-		
-
-
-		virtual ostream& OutputToConsole(ostream& Output) //Output to the overloaded ostream operator that outputs not just to the console but to the output file as well.
-		{
-			return Output;
-		}
 
 		 
 
@@ -356,6 +364,7 @@ class HangManBase
 		virtual ~HangManBase() // This is the last thing that should be destroyed i.e. when the game ends -Rami
 		{
 			OutputToFile();
+			//cout << "hi" << endl;
 		};
 
 
@@ -387,6 +396,29 @@ class HangManBase
 
 
 class HangManGame : public HangManBase {
+
+
+	//virtual function that overloads from its previous version
+	friend ostream& operator<<(ostream& OutputToConsole, const HangManGame& ClassReferenceBase) //overloaded operator that returns only times won/lost
+	{
+		cout << ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost();
+		double Average = 0;
+		if (ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost() == 0)
+			Average = 0;
+		else
+		{
+			Average = ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() / (ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost());
+		}
+		
+		//double Average = ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() / (ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost());
+		string ConsoleOutput = "You have won " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon()) + " times and lost " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost()) + " times!\n" + "Average is: " + to_string(Average);
+
+		OutputToConsole << ConsoleOutput << endl;
+
+
+		return OutputToConsole;
+	}
+
 private:
 	string secretWord;
 	string guessedWord;
@@ -394,15 +426,7 @@ private:
 	int remainingAttempts;
 	vector<string> HangManASCII;
 	vector<char> guessedLetters;
-	void initializeGame() {
-		srand(static_cast<unsigned int>(time(nullptr)));
-		int randomIndex = rand() % HoldWords.size();
-		secretWord = HoldWords[randomIndex];
-		guessedWord = string(secretWord.length(), '_');
-		maxAttempts = 6; // Adjust as needed
-		remainingAttempts = maxAttempts;
-		guessedLetters.clear();
-	}
+
 
 	bool isLetterGuessed(char letter) const {
 		return find(guessedLetters.begin(), guessedLetters.end(), letter) != guessedLetters.end();
@@ -423,6 +447,15 @@ private:
 	}
 
 public:
+	void initializeGame() {
+		srand(static_cast<unsigned int>(time(nullptr)));
+		int randomIndex = rand() % HoldWords.size();
+		secretWord = HoldWords[randomIndex];
+		guessedWord = string(secretWord.length(), '_');
+		maxAttempts = 6; // Adjust as needed
+		remainingAttempts = maxAttempts;
+		guessedLetters.clear();
+	}
 
 	HangManGame() {
 		initializeGame();
@@ -434,7 +467,7 @@ public:
 		//Main game loop
 		while (!isGameOver()) {
 			printHangman(maxAttempts - remainingAttempts);
-
+			
 			cout << "Secret Word: " << guessedWord << endl;
 			cout << "Remaining Attempts: " << remainingAttempts << endl;
 
@@ -468,15 +501,18 @@ public:
 		if (isGameWon()) {
 			cout << "Congratulations! You've guessed the word: " << secretWord << endl;
 			LinkedListTemplateCall.lListPush(secretWord, true);
+			//LinkedListTemplateCall.Return();
 		}
 		else {
 			cout << "\nYou've run out of attempts. The secret word was: " << secretWord << endl;
 			LinkedListTemplateCall.lListPush(secretWord, false);
+			//cout << LinkedListTemplateCall.ReturnTimesLost();
+			//LinkedListTemplateCall.Return();
 		}
 	}
-	~HangManGame()
+	virtual ~HangManGame()
 	{
-		initializeGame();
+		
 	}
 };
 
@@ -488,49 +524,50 @@ public:
 
 
 
-//Rami Portion End
 
-//This should be location after the derived/base class - rami t
+//We agreed upon this is how WordManager Should look like.
 // WordManager class that will handle the sorting of words by length and alphabetical order - Tajwar R
 class WordManager {
 public:
-	vector<string> words;
-	WordManager(HangManGame obj)
+	HangManGame* PtrGameHold = nullptr;
+	WordManager(HangManGame& obj)
 	{
-		this->words = obj.HoldWords;
+		PtrGameHold = &obj;
 	};
 
-	void DisplayWords(vector<string>& Words)
-	{
-		const int COLUMN_SIZE = 3;
-		int counter = 0;
-		for (auto word : Words)
-		{
-			cout << left <<setw(15) << word  << "\t";
-			counter++;
-			if (counter % 3 == 0) {
-				cout << endl;
-			}
-		}
-	}
+
+	//We Shouldn't Be displaying the words at all - rami t
+	//void DisplayWords(vector<string>& Words)
+	//{
+	//	const int COLUMN_SIZE = 3;
+	//	int counter = 0;
+	//	for (auto word : Words)
+	//	{
+	//		cout << left <<setw(15) << word  << "\t";
+	//		counter++;
+	//		if (counter % 3 == 0) {
+	//			cout << endl;
+	//		}
+	//	}
+	//}
 	// Sorts the words vector alphabetically
 	void sortWordsAlphabetically() {
-		sort(words.begin(), words.end());
-		DisplayWords(words);
+		sort(PtrGameHold->HoldWords.begin(), PtrGameHold->HoldWords.end());
+		//DisplayWords(words);
 	}
 
 	// Sorts the words vector by word length
 	void sortWordsByLength() {
-		sort(words.begin(), words.end(), [](const string& a, const string& b) {
+		sort(PtrGameHold->HoldWords.begin(), PtrGameHold->HoldWords.end(), [](const string& a, const string& b) {
 			return a.length() < b.length();
 			});
-		DisplayWords(words);
+		//DisplayWords(words);
 
 	}
 
 	// Returns the total number of words in the vector
-	size_t countWords(const vector<string>& words) const {
-		return words.size();
+	size_t countWords() const {
+		return PtrGameHold->HoldWords.size();
 	}
 
 
@@ -545,25 +582,27 @@ public:
 int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF); //Memory Management
-	const string HoldWelcome = "\nWelcome to the Hangman Game";
-	const string WantToPlayInitial = "\nDo you want to play the game? p for yes, v to view a list of possible words, or q for quitting program  : ";
+	const string HoldWelcome = "Welcome to the Hangman Game";
+	string WantToPlay = "Do you want to play the game? p for yes, v to sort the possible words, or q for quitting program  : ";
 	char PlayChecker = 'w';
 	bool OnlySortOnce = false;
-
+	
 	bool PlayedOnce = false; //Playing the game once allows you to output;
+	
+	cout << setw(50) << setfill('*')  << "" << endl;
+	cout << setw((50 - HoldWelcome.size())/2) << "" << HoldWelcome << setw((50 - HoldWelcome.size()) / 2) << "" << endl;
+	cout << setw(50) << setfill('*') << "" << endl;
+	cout << setw(1) << setfill(' ') << "";
+	
 
-	cout << setw(50) << setfill('*') << "" << endl
-		<< setw((49 - HoldWelcome.size()) / 2) << "" << HoldWelcome << setw((49 - HoldWelcome.size()) / 2) << "" << endl
-		<< setw(50) << "" << endl << setw(0) << setfill(' ') << endl;
-
-
-
+	//So it doesn't exit early
+	HangManGame game;
 
 	while (PlayChecker != 'q')
 	{
-		HangManGame game;
+		
 
-		cout << WantToPlayInitial;
+		cout << WantToPlay;
 		cin >> PlayChecker;
 
 		PlayChecker = tolower(PlayChecker); //Changing user input to lower case for consistency
@@ -571,19 +610,29 @@ int main()
 		//Checks for valid input
 		try
 		{
-			if (PlayChecker != 'p' && PlayChecker != 'q' && PlayChecker != 'v')
+			if (PlayChecker != 'p' && PlayChecker != 'q' && PlayChecker != 'v' && OnlySortOnce == false)
 			{
 				throw exception("Wrong Input: Exiting by default");
+			}
+			else if (PlayChecker != 'p' && PlayChecker != 'q' && OnlySortOnce == true)
+			{
+				throw exception("Replaying Game");
 			}
 
 		}
 		catch (exception e)
 		{
+			//making sure in the beginning program exit if incorrect but after the first time it just replays the game - rami
 			cout << e.what() << endl;
-			PlayChecker = 'q';
+			if (e.what() == "Wrong Input: Exiting by default")
+				PlayChecker = 'q';
+			else if (e.what() == "Replaying Game")
+				PlayChecker = 'p';
+			cin.ignore(100, '\n');
+			cin.clear();
 		}
 
-
+		//This Activates only once
 		if (OnlySortOnce == false && PlayChecker == 'v')
 		{
 			char SortingOfWords = 0;
@@ -600,7 +649,7 @@ int main()
 			}
 			catch (exception e)
 			{
-				cout << e.what();
+				cout << e.what() << endl;;
 				SortingOfWords = 'u';
 
 			}
@@ -614,14 +663,18 @@ int main()
 
 					SorterSystem.sortWordsAlphabetically();
 					OnlySortOnce = true;
+					PlayChecker = 'p';
 					break;
 				case 'l':
 					OnlySortOnce = true;
 
 					SorterSystem.sortWordsByLength();
+					PlayChecker = 'p';
 					break;
 				case 'u': //keeps it unsorted
 				default:
+					OnlySortOnce = true;
+					PlayChecker = 'p';
 					break;
 				}
 			}
@@ -633,6 +686,12 @@ int main()
 		else if (PlayChecker == 'p')
 		{
 			game.playGame();
+			WantToPlay = "Do you want to play the game? p for yes or q for quitting program  : ";
+			game.initializeGame();
+		}
+		else if (PlayChecker == 'q')
+		{
+			cout << game;
 		}
 	}
 
