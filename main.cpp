@@ -280,7 +280,7 @@ class HangManBase
 		// basic Output with no file selected
 		virtual void OutputToFile() //This Outputs to the file when everything is done.
 		{
-			const string OutputLocation = "OutputData\\GameResult.txt";
+			const string OutputLocation = "GameResult.txt";
 
 			ofstream OutputFile;
 			OutputFile.open(OutputLocation);
@@ -305,7 +305,7 @@ class HangManBase
 
 		void StoringOfData(vector<string>& DataStorer, string JsonKey) //Rami - Operation to store the data, this opens the file and stores the data.
 		{
-			const string HoldFolderLocationplusfile = "InputData/Words.json"; //input file location - Rami
+			const string HoldFolderLocationplusfile = "Words.json"; //input file location - Rami
 			ifstream WordsDataFile; //using if because it will only input the file and not write over it;
 
 			WordsDataFile.open(HoldFolderLocationplusfile); //Opening the file

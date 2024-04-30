@@ -1,2 +1,0 @@
-Word Guessed : Guessed Successfully
-buzz           No 
