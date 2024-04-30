@@ -8,5 +8,9 @@
         "quizzical", "blackjack", "embezzled", "frazzling", "cheapjack", "jukeboxes", "schnozzle", "scuzzbags", "showbizzy", "buzzkills",
         "penmanship", "pennyworth", "appendices", "compensate", "dependence", "recompense", "subpenaing", "unhappened", "dependably", "plumpening"
     
-    ]
+    ],
+    "HangMan_ASCII": [
+"\n +---+\n  |   |\n      |\n      |\n      |\n      |\n=========\n","\n  +---+\n  |   |\n  O   |\n      |\n      |\n      |\n=========", "\n  +---+\n  |   |\n  O   |\n  |   |\n      |\n      |\n=========",
+"\n  +---+\n  |   |\n  O   |\n /|   |\n      |\n      |\n=========", "\n  +---+\n  |   |\n  O   |\n /|\\  |\n      |\n      |\n=========", 
+"\n  +---+\n  |   |\n  O   |\n /|\\  |\n /    |\n      |\n=========", "\n  +---+\n  |   |\n  O   |\n /|\\  |\n / \\  |\n      |\n=========" ]
 }

@@ -291,13 +291,11 @@ class HangManBase
 
 		//Operation Section
 		vector<string> HoldWords; //Rami - Holding the words to be used in the Hangman Game
-		
 
-		void StoringOfData(vector<string>& DataStorer) //Rami - Operation to store the data, this opens the file and stores the data.
+
+		void StoringOfData(vector<string>& DataStorer, string JsonKey) //Rami - Operation to store the data, this opens the file and stores the data.
 		{
-			const string HoldFolderLocationplusfile = "InputData\\Words.json"; //input file location - Rami
-			
-
+			const string HoldFolderLocationplusfile = "InputData/Words.json"; //input file location - Rami
 			ifstream WordsDataFile; //using if because it will only input the file and not write over it;
 
 			WordsDataFile.open(HoldFolderLocationplusfile); //Opening the file
@@ -311,13 +309,14 @@ class HangManBase
 
 			//cout << JsonDataInfoHolder["Words"][2]; //Checking words if inputted correctly
 
-			const size_t JSONTOTALSIZE = JsonDataInfoHolder["Words"].size(); //Keeps the size of the jsonData inside a const to be used later, unchanged
+			const size_t JSONTOTALSIZE = JsonDataInfoHolder[JsonKey].size(); //Keeps the size of the jsonData inside a const to be used later, unchanged
 
 			for (size_t StartingPushingIntoVector = 0; StartingPushingIntoVector < JSONTOTALSIZE; StartingPushingIntoVector++)
 			{
-				DataStorer.push_back(JsonDataInfoHolder["Words"][StartingPushingIntoVector]);
+				DataStorer.push_back(JsonDataInfoHolder[JsonKey][StartingPushingIntoVector]);
 				//cout << StartingPushingIntoVector << endl;
 			}
+			
 
 			//for (auto& WordChecker : DataStorer)
 			//{
@@ -329,7 +328,7 @@ class HangManBase
 		//Constructor - When called it activates the loading of data from json file to the vector - Rami T
 		HangManBase()
 		{
-			StoringOfData(this->HoldWords);
+			StoringOfData(this->HoldWords, "Words");
 			//LinkedListTemplateCall.lListPush("hi", false);
 
 			//LinkedListTemplateCall.lListPush("hiaaa", true);
@@ -386,22 +385,147 @@ class HangManBase
 };
 
 
+
+class HangManGame : public HangManBase {
+private:
+	string secretWord;
+	string guessedWord;
+	int maxAttempts;
+	int remainingAttempts;
+	vector<string> HangManASCII;
+	vector<char> guessedLetters;
+	void initializeGame() {
+		srand(static_cast<unsigned int>(time(nullptr)));
+		int randomIndex = rand() % HoldWords.size();
+		secretWord = HoldWords[randomIndex];
+		guessedWord = string(secretWord.length(), '_');
+		maxAttempts = 6; // Adjust as needed
+		remainingAttempts = maxAttempts;
+		guessedLetters.clear();
+	}
+
+	bool isLetterGuessed(char letter) const {
+		return find(guessedLetters.begin(), guessedLetters.end(), letter) != guessedLetters.end();
+	}
+
+	bool isGameWon() const {
+		return secretWord == guessedWord;
+	}
+
+	bool isGameOver() const {
+		return remainingAttempts <= 0 || isGameWon();
+	}
+
+	void printHangman(int incorrectGuesses) {
+		// Print Hangman ASCII art based on number of incorrect guesses
+		StoringOfData(HangManASCII, "HangMan_ASCII");
+		cout << HangManASCII[incorrectGuesses];
+	}
+
+public:
+
+	HangManGame() {
+		initializeGame();
+	}
+
+	void playGame() {
+		char guess;
+		cout << "Welcome to Hangman!\n";
+		//Main game loop
+		while (!isGameOver()) {
+			printHangman(maxAttempts - remainingAttempts);
+
+			cout << "Secret Word: " << guessedWord << endl;
+			cout << "Remaining Attempts: " << remainingAttempts << endl;
+
+			cout << "Guessed Letters: ";
+			for (char letter : guessedLetters) {
+				cout << letter << " ";
+			}
+			cout << endl;
+			cout << "Enter a letter guess: ";
+			cin >> guess;
+			guess = tolower(guess); // Convert to lowercase for consistency
+			if (isLetterGuessed(guess)) {
+				cout << "You've already guessed that letter!" << endl;
+				continue;
+			}
+
+			guessedLetters.push_back(guess);
+			if (secretWord.find(guess) != string::npos) {
+				cout << "Correct guess!" << endl;
+				for (int i = 0; i < secretWord.length(); ++i) {
+					if (secretWord[i] == guess) {
+						guessedWord[i] = guess;
+					}
+				}
+			}
+			else {
+				cout << "Incorrect guess!" << endl;
+				--remainingAttempts;
+			}
+		}
+		if (isGameWon()) {
+			cout << "Congratulations! You've guessed the word: " << secretWord << endl;
+			LinkedListTemplateCall.lListPush(secretWord, true);
+		}
+		else {
+			cout << "\nYou've run out of attempts. The secret word was: " << secretWord << endl;
+			LinkedListTemplateCall.lListPush(secretWord, false);
+		}
+	}
+	~HangManGame()
+	{
+		initializeGame();
+	}
+};
+
+
+
+
+
+
+
+
+
 //Rami Portion End
 
 //This should be location after the derived/base class - rami t
 // WordManager class that will handle the sorting of words by length and alphabetical order - Tajwar R
 class WordManager {
 public:
+	vector<string> words;
+	WordManager(HangManGame obj)
+	{
+		this->words = obj.HoldWords;
+	};
+
+	void DisplayWords(vector<string>& Words)
+	{
+		const int COLUMN_SIZE = 3;
+		int counter = 0;
+		for (auto word : Words)
+		{
+			cout << left <<setw(15) << word  << "\t";
+			counter++;
+			if (counter % 3 == 0) {
+				cout << endl;
+			}
+		}
+	}
 	// Sorts the words vector alphabetically
-	void sortWordsAlphabetically(vector<string>& words) {
+	void sortWordsAlphabetically() {
 		sort(words.begin(), words.end());
+		DisplayWords(words);
 	}
 
 	// Sorts the words vector by word length
-	void sortWordsByLength(vector<string>& words) {
+	void sortWordsByLength() {
 		sort(words.begin(), words.end(), [](const string& a, const string& b) {
 			return a.length() < b.length();
 			});
+		DisplayWords(words);
+
 	}
 
 	// Returns the total number of words in the vector
@@ -421,8 +545,8 @@ public:
 int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF); //Memory Management
-	const string HoldWelcome = "Welcome to the Hangman Game";
-	const string WantToPlayInitial = "Do you want to play the game? p for yes, q for quitting program : ";
+	const string HoldWelcome = "\nWelcome to the Hangman Game";
+	const string WantToPlayInitial = "\nDo you want to play the game? p for yes, v to view a list of possible words, or q for quitting program  : ";
 	char PlayChecker = 'w';
 	bool OnlySortOnce = false;
 
@@ -432,34 +556,36 @@ int main()
 		<< setw((49 - HoldWelcome.size()) / 2) << "" << HoldWelcome << setw((49 - HoldWelcome.size()) / 2) << "" << endl
 		<< setw(50) << "" << endl << setw(0) << setfill(' ') << endl;
 
-	cout << WantToPlayInitial;
-	cin >> PlayChecker;
 
-	try
+
+
+	while (PlayChecker != 'q')
 	{
-		if (PlayChecker != 'p' && PlayChecker != 'P' && PlayChecker != 'q' && PlayChecker != 'Q')
+		HangManGame game;
+
+		cout << WantToPlayInitial;
+		cin >> PlayChecker;
+
+		PlayChecker = tolower(PlayChecker); //Changing user input to lower case for consistency
+
+		//Checks for valid input
+		try
 		{
-			throw exception("Wrong Input: Exiting by default");
+			if (PlayChecker != 'p' && PlayChecker != 'q' && PlayChecker != 'v')
+			{
+				throw exception("Wrong Input: Exiting by default");
+			}
+
+		}
+		catch (exception e)
+		{
+			cout << e.what() << endl;
+			PlayChecker = 'q';
 		}
 
-	}
-	catch (exception e)
-	{
-		cout << e.what() << endl;
-		PlayChecker = 'q';
-	}
 
-	while (PlayChecker == 'p' || PlayChecker == 'P')
-	{
-		HangManBase BaseClass; //Needs to be switched out with derived class
-		//cout << BaseClass;
-		//PlayChecker = 'q';
-
-
-		if (OnlySortOnce == false)
+		if (OnlySortOnce == false && PlayChecker == 'v')
 		{
-
-
 			char SortingOfWords = 0;
 
 			cout << "How would you like to sort the words? a(alphabetical), l(length), or unsorted(u):";
@@ -481,7 +607,7 @@ int main()
 
 			//Done to constantly deallocate the aggregate - rami t
 			{
-				WordManager SorterSystem(BaseClass);
+				WordManager SorterSystem(game);
 				switch (SortingOfWords)
 				{
 				case 'a':
@@ -500,9 +626,14 @@ int main()
 				}
 			}
 		}
-
-
-
+		else if (OnlySortOnce == true && PlayChecker == 'v')
+		{
+			cout << "You can only view word list once per session!\n";
+		}
+		else if (PlayChecker == 'p')
+		{
+			game.playGame();
+		}
 	}
 
 
