@@ -556,22 +556,30 @@ public:
 		PtrGameHold = &obj;
 	};
 
-
-	//We Shouldn't Be displaying the words at all, if people want to search the word their can look at the json file - rami t
+	// Displays the words in the HoldWords vector and iterates through the words using a normal for loop with a vector iterator and then prints each word.
 	void DisplayWords()
 	{
-		const int COLUMN_SIZE = 3;
-		int counter = 0;
-		for (auto& word : this->PtrGameHold->HoldWords)
-		{
-			cout << left <<setw(15) << word  << "\t";
-			counter++;
-			if (counter % 3 == 0) {
-				cout << endl;
-			}
-		}
-		cout << endl;
+	    const int COLUMN_SIZE = 3; // Display three words per row
+	    int counter = 0;
+	    // Use a normal for loop with a vector iterator
+	    for (vector<string>::iterator it = PtrGameHold->HoldWords.begin(); it != PtrGameHold->HoldWords.end(); ++it)
+	    {
+	        // Print the current word
+	        cout << left << setw(15) << *it << "\t";
+	        counter++;
+	        // Print a newline every three words
+	        if (counter % COLUMN_SIZE == 0)
+	        {
+	            cout << endl;
+	        }
+	    }
+	    // Add a newline at the end if necessary
+	    if (counter % COLUMN_SIZE != 0)
+	    {
+	        cout << endl;
+	    }
 	}
+
 	// Sorts the words vector alphabetically
 	void sortWordsAlphabetically() {
 		sort(PtrGameHold->HoldWords.begin(), PtrGameHold->HoldWords.end());
