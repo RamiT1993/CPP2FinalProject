@@ -594,13 +594,6 @@ public:
 		return PtrGameHold->HoldWords.size();
 	}
 
-
-	//Don't need this because all of them are unique because this is hangman, and we havent use set before - rami t
-	//// Returns the number of unique words in the vector
-	//size_t countUniqueWords(const vector<string>& words) const {
-	//    set<string> uniqueWords(words.begin(), words.end());
-	//    return uniqueWords.size();
-	//}
 };
 
 int main()
