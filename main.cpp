@@ -431,7 +431,8 @@ private:
 	string secretWord;
 	string guessedWord;
 	int maxAttempts;
-	
+	bool DifficultyOnHard = false;
+	bool DifficultyAlreadyChosen = false;
 	int remainingAttempts;
 	vector<string> HangManASCII;
 	vector<string> guessedLetters;
@@ -458,11 +459,63 @@ private:
 	void initializeGame() {
 		srand(static_cast<unsigned int>(time(nullptr)));
 		int randomIndex = rand() % HoldWords.size();
+
+		if (DifficultyOnHard == true)
+		{
+			//Setting Up HardMode Here
+
+			while (HoldWords[randomIndex].size() < 6) {
+
+				randomIndex = rand() % HoldWords.size();
+			}
+			maxAttempts = 3;
+		}
+		else
+		{
+			maxAttempts = 6;
+		}
+
 		secretWord = HoldWords[randomIndex];
 		guessedWord = string(secretWord.length(), '_');
-		maxAttempts = 6; // Adjust as needed
+		//maxAttempts = 6; // Adjust as needed
 		remainingAttempts = maxAttempts;
 		guessedLetters.clear();
+	}
+
+	void DifficultySetting() {
+
+		if (DifficultyAlreadyChosen == false)
+		{
+			char DiffChosen;
+			cout << "Choose 'e' for easy difficulty or 'h' for hard difficulty (Can Only Be Changed On Game START):";
+			cin >> DiffChosen;
+
+			if (DiffChosen != 'e' && DiffChosen != 'h'){
+
+				cout << "Wrong Input Selected. Setting It To Default Difficulty" << endl;
+				DiffChosen = 'e';
+				cin.clear();
+				cin.ignore(1000);
+				DifficultyOnHard = false;
+			}
+			else 
+			{
+				if (DiffChosen == 'e') {
+					cout << "Easy Mode Selected" << endl;
+					DifficultyOnHard = false;
+				}
+				else if (DiffChosen == 'h') {
+					cout << "Hard Mode Selected" << endl;
+					DifficultyOnHard = true;
+				}
+			}
+
+
+
+
+
+			DifficultyAlreadyChosen = true;
+		}
 	}
 
 	void playGame() {
@@ -543,6 +596,7 @@ public:
 	//Purpose of this operator++ prefix overloader is to initialize the game and then play it without accessing the member functions directly.
 	void operator++(){
 
+		DifficultySetting();
 		initializeGame();
 		playGame();
 
@@ -627,8 +681,8 @@ int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF); //Memory Management
 	const string HoldWelcome = "Welcome to the Hangman Game";
-	string WantToPlay = "Do you want to play the game? p for yes, v to sort the possible words and display the words, or q for quitting program  : ";
-	char PlayChecker = 'w';
+	string WantToPlay = "Do you want to play the game? p-play, v-sort/display words, or q-quit: ";
+	char PlayChecker = 'w'; 
 	bool OnlySortOnce = false; //Only sorts the game once
 	
 	bool PlayedOnce = false; //Playing the game once allows you to output;
@@ -636,7 +690,7 @@ int main()
 	cout << setw(50) << setfill('*')  << "" << endl;
 	cout << setw((50 - HoldWelcome.size())/2) << "" << HoldWelcome << setw((50 - HoldWelcome.size()) / 2) << "" << endl;
 	cout << setw(50) << setfill('*') << "" << endl;
-	cout << setw(1) << setfill(' ') << "";
+	cout << setw(0) << setfill(' ') << "";
 	
 
 	//So it doesn't exit early
