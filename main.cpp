@@ -434,10 +434,10 @@ private:
 	
 	int remainingAttempts;
 	vector<string> HangManASCII;
-	vector<char> guessedLetters;
+	vector<string> guessedLetters;
 
 
-	bool isLetterGuessed(char letter) const {
+	bool isLetterGuessed(string letter) const {
 		return find(guessedLetters.begin(), guessedLetters.end(), letter) != guessedLetters.end();
 	}
 
@@ -452,7 +452,7 @@ private:
 	void printHangman(int incorrectGuesses) {
 		// Print Hangman ASCII art based on number of incorrect guesses
 		StoringOfData(HangManASCII, "HangMan_ASCII");
-		cout << HangManASCII[incorrectGuesses];
+		cout << HangManASCII[incorrectGuesses] << endl;
 	}
 
 	void initializeGame() {
@@ -466,7 +466,9 @@ private:
 	}
 
 	void playGame() {
-		char guess;
+		
+		string guess;
+
 		cout << "Welcome to Hangman!\n";
 		//Main game loop
 		while (!isGameOver()) {
@@ -475,29 +477,46 @@ private:
 			cout << "Secret Word: " << guessedWord << endl;
 			cout << "Remaining Attempts: " << remainingAttempts << endl;
 
-			cout << "Guessed Letters: ";
-			for (char letter : guessedLetters) {
+			cout << "Guessed Letters/Words: ";
+			for (string letter : guessedLetters) {
 				cout << letter << " ";
 			}
 			cout << endl;
 			cout << "Enter a letter guess: ";
 			cin >> guess;
 
-			//Add a checker system here
 
 
-			guess = tolower(guess); // Convert to lowercase for consistency
+			// Convert to lowercase for consistency
+			for (auto& letter : guess) {
+				letter = tolower(letter);
+			}
+
+
 			if (isLetterGuessed(guess)) {
 				cout << "You've already guessed that letter!" << endl;
 				continue;
 			}
 
-			guessedLetters.push_back(guess);
+			//Check if player guess the whole word or one letter only
+			if (guess.length() != secretWord.length() && guess.length() != 1)
+			{
+				cout << "Please enter one letter or guess the whole word" << endl;
+				cin.clear();
+				continue;
+			}
+			else if (guess == secretWord) //Check if player guessed the whole word correctly
+			{
+				guessedWord = guess; // changes the guessed word to the players guess in order to set the winning conditions
+			}
+
+			guessedLetters.push_back(guess); 
+			//Updates guessed word 
 			if (secretWord.find(guess) != string::npos) {
 				cout << "Correct guess!" << endl;
 				for (int i = 0; i < secretWord.length(); ++i) {
-					if (secretWord[i] == guess) {
-						guessedWord[i] = guess;
+					if (secretWord[i] == guess[0]) {
+						guessedWord[i] = guess[0];
 					}
 				}
 			}
@@ -506,7 +525,7 @@ private:
 				--remainingAttempts;
 			}
 		}
-		if (isGameWon()) {
+		if (isGameWon() ) {
 			cout << "Congratulations! You've guessed the word: " << secretWord << endl;
 			LinkedListTemplateCall.lListPush(secretWord, true);
 			//LinkedListTemplateCall.Return();
