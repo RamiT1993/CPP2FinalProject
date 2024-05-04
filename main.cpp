@@ -263,9 +263,9 @@ class LinkedList
 class HangManBase
 {
 	//Overloader operator makes it easier to output to the console
-	friend ostream& operator<<(ostream& OutputToConsole, const HangManBase& ClassReferenceBase) //overloaded operator that returns only times won/lost
+	friend ostream& operator<<(ostream& OutputToConsole, HangManBase& ClassReferenceBase) //overloaded operator that returns only times won/lost
 	{
-
+		ClassReferenceBase.OutputToFile();
 		string ConsoleOutput = "You have won " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon()) + " times and lost " + to_string(ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost()) + " times!";
 		OutputToConsole << ConsoleOutput << endl;
 		
@@ -274,13 +274,19 @@ class HangManBase
 	}
 
 
-
-	protected:
-		
+	private:
 		// basic Output with no file selected
 		virtual void OutputToFile() //This Outputs to the file when everything is done.
 		{
-			const string OutputLocation = "GameResult.txt";
+
+
+			string OutputLocation = "";
+
+			cout << "Please Input File Name To Store This As: ";
+			cin >> OutputLocation;
+
+			OutputLocation += ".txt";
+
 
 			ofstream OutputFile;
 			OutputFile.open(OutputLocation);
@@ -365,7 +371,7 @@ class HangManBase
 
 		virtual ~HangManBase() // This is the last thing that should be destroyed i.e. when the game ends -Rami
 		{
-			OutputToFile();
+			//OutputToFile();
 			//cout << "hi" << endl;
 		};
 
@@ -401,10 +407,11 @@ class HangManGame : public HangManBase {
 
 
 	//virtual function that overloads from its previous version, Hussein and Rami Fixed This Code Together
-	friend ostream& operator<<(ostream& OutputToConsole, const HangManGame& ClassReferenceBase) //overloaded operator that returns only times won/lost
+	friend ostream& operator<<(ostream& OutputToConsole, HangManGame& ClassReferenceBase)  //overloaded operator that returns only times won/lost
 	{
 		//cout << ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost();
 
+		ClassReferenceBase.OutputToFile();
 		int Denom = ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() + ClassReferenceBase.LinkedListTemplateCall.ReturnTimesLost();
 		double Average = 0;
 		if (Denom == 0 && ClassReferenceBase.LinkedListTemplateCall.ReturnTimesWon() <= 0) {
@@ -438,6 +445,16 @@ private:
 	vector<string> guessedLetters;
 
 
+	void OutputToFile() 
+	{
+		const string OutputLocation = "GameResult.txt";
+
+		ofstream OutputFile;
+		OutputFile.open(OutputLocation);
+
+		LinkedListTemplateCall.OutputToFile(OutputFile);
+	}
+
 	bool isLetterGuessed(string letter) const {
 		return find(guessedLetters.begin(), guessedLetters.end(), letter) != guessedLetters.end();
 	}
@@ -464,7 +481,7 @@ private:
 		{
 			//Setting Up HardMode Here
 
-			while (HoldWords[randomIndex].size() < 6) {
+			while (HoldWords[randomIndex].size() <= 5) {
 
 				randomIndex = rand() % HoldWords.size();
 			}
